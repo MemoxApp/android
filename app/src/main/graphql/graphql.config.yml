@@ -1,0 +1,4 @@
+name: "GraphQL Schema"
+schema: https://memox.usfl.cn/query
+schemaPath: "schema.graphqls"
+documents: '**/*.graphql'

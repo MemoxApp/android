@@ -1,0 +1,20 @@
+mutation Login($input: LoginInput!) {
+    login(input: $input) {
+        id
+        token
+        permission
+        expire
+    }
+}
+
+mutation Register($input: RegisterInput!) {
+    register(input: $input)
+}
+
+mutation SendEmailCode($input:SendEmailCodeInput!) {
+    sendEmailCode(input:$input)
+}
+
+mutation Forget($input:ForgetInput!){
+    forget(input:$input)
+}

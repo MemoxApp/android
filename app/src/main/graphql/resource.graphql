@@ -1,0 +1,38 @@
+query Resources($page: Int64!, $size: Int64!, $byCreate: Boolean!, $desc: Boolean!) {
+    allResources(page: $page, size: $size, byCreate: $byCreate, desc: $desc) {
+        id
+        user {
+            id
+            username
+            avatar
+        }
+        path
+        size
+        memories{
+            id
+            title
+        }
+        create_time
+    }
+}
+
+mutation DeleteResource($input:ID!){
+    deleteResource(input:$input)
+}
+
+mutation GetToken{
+    # 文件名格式(.png/.jpg/.jpeg/.gif/.webp)
+    # 推荐使用 32位 md5 散列值充当文件名
+    getToken(fileName:"1234567890abcdef.png"){
+        access_key
+        secret_access_key
+        session_token
+        user_id
+        file_name
+    }
+    # 本地存储时仅需 session_token ，百度云对象存储需要使用到所有四个字段
+}
+
+mutation LocalUpload($input:LocalUploadInput!){
+    localUpload(input:$input)
+}

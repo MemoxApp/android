@@ -1,0 +1,63 @@
+mutation AddComment($input:AddCommentInput!){
+    addComment(input:$input)
+}
+
+mutation UpdateComment($input:UpdateCommentInput!){
+    updateComment(input:$input)
+}
+
+mutation DeleteComment($input:ID!){
+    deleteComment(input:$input)
+}
+
+query Comments($id: ID!, $page: Int64!, $size: Int64!, $desc: Boolean!) {
+    allComments(
+        id: $id
+        page: $page
+        size: $size
+        desc: $desc
+    ) {
+        id
+        user {
+            id
+            username
+            avatar
+        }
+        memory{
+            id
+            content
+        }
+        content
+        hashtags {
+            id
+            name
+        }
+        create_time
+    }
+}
+
+query SubComments($id: ID!, $page: Int64!, $size: Int64!, $desc: Boolean!) {
+    subComments(
+        id: $id
+        page: $page
+        size: $size
+        desc: $desc
+    ) {
+        id
+        user {
+            id
+            username
+            avatar
+        }
+        comment{
+            id
+            content
+        }
+        content
+        hashtags {
+            id
+            name
+        }
+        create_time
+    }
+}

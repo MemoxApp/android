@@ -1,0 +1,22 @@
+query Histories($id: ID!, $page: Int64!, $size: Int64!, $desc: Boolean!) {
+    allHistories(
+        id: $id
+        page: $page
+        size: $size
+        desc: $desc
+    ) {
+        id
+        user {
+            id
+            username
+            avatar
+        }
+        title
+        content
+        hashtags {
+            id
+            name
+        }
+        create_time
+    }
+}

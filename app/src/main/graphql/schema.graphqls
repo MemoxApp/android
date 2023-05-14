@@ -1,0 +1,349 @@
+# This file was generated. Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+"权限控制"
+directive @admin on OBJECT | FIELD_DEFINITION
+
+"权限控制"
+directive @auth on OBJECT | FIELD_DEFINITION
+
+"仅用于代码生成时强制单独resolver"
+directive @goField(forceResolver: Boolean) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+type Comment {
+    "是否已归档"
+    archived: Boolean!
+    "内容"
+    content: String!
+    "发布时间"
+    create_time: DateTime!
+    hashtags: [HashTag]!
+    "Comment ID"
+    id: ID!
+    "Memory ID"
+    memory: Memory!
+    "子回复"
+    subComments: [SubComment]!
+    "修改时间"
+    update_time: DateTime!
+    "创建用户"
+    user: User!
+}
+
+type HashTag {
+    "是否已归档"
+    archived: Boolean!
+    "创建时间"
+    create_time: DateTime!
+    "HashTag ID"
+    id: ID!
+    "Tag名称"
+    name: String!
+    "修改时间"
+    update_time: DateTime!
+    "创建用户"
+    user: User!
+}
+
+type History {
+    "内容"
+    content: String!
+    "发布时间"
+    create_time: DateTime!
+    hashtags: [HashTag]!
+    "History ID"
+    id: ID!
+    "Memory ID"
+    memory: Memory!
+    "标题"
+    title: String!
+    "创建用户"
+    user: User!
+}
+
+type LoginPayload {
+    expire: DateTime!
+    id: ID!
+    permission: Int!
+    token: String!
+}
+
+type Memory {
+    "是否已归档"
+    archived: Boolean!
+    "内容"
+    content: String!
+    "发布时间"
+    create_time: DateTime!
+    hashtags: [HashTag]!
+    "Memory ID"
+    id: ID!
+    "标题"
+    title: String!
+    "修改时间"
+    update_time: DateTime!
+    "创建用户"
+    user: User!
+}
+
+type Mutation {
+    addComment(input: AddCommentInput!): ID!
+    addMemory(input: AddMemoryInput!): ID!
+    addSubscribe(input: AddSubscribeInput!): ID!
+    "归档Memory"
+    archiveMemory(archived: Boolean!, input: ID!): Boolean!
+    deleteComment(input: ID!): Boolean!
+    deleteHashTag(input: ID!): Boolean!
+    "彻底删除Memory(只有已归档的Memory可以被删除)"
+    deleteMemory(input: ID!): Boolean!
+    deleteResource(input: ID!): Boolean!
+    deleteSubscribe(input: ID!): Boolean!
+    "找回密码"
+    forget(input: ForgetInput!): Boolean!
+    getToken(fileName: String!): UploadTokenPayload!
+    "本地上传，直接上传至Server，仅在StorageProvider类型为local可用"
+    localUpload(input: LocalUploadInput!): String!
+    "登录"
+    login(input: LoginInput!): LoginPayload!
+    "注册新用户"
+    register(input: RegisterInput!): ID!
+    "发送邮箱验证码"
+    sendEmailCode(input: SendEmailCodeInput!): Boolean!
+    updateComment(input: UpdateCommentInput!): Boolean!
+    updateHashTag(input: HashTagInput!): Boolean!
+    updateMemory(input: UpdateMemoryInput!): Boolean!
+    updateSubscribe(input: UpdateSubscribeInput!): Boolean!
+}
+
+type Query {
+    "所有Comments，按创建时间排序，默认降序"
+    allComments(desc: Boolean! = true, id: ID!, page: Int64!, size: Int64!): [Comment]!
+    "所有HashTags，按修改时间排序，默认降序"
+    allHashTags(input: ListInput!): [HashTag]!
+    """
+
+    查看指定Memory的所有历史修改记录，降序
+    历史记录在删除Memory时会随之删除
+    """
+    allHistories(desc: Boolean! = true, id: ID!, page: Int64!, size: Int64!): [History]!
+    "所有Memories，默认按修改时间降序"
+    allMemories(input: ListInput!): [Memory]!
+    "指定话题下的所有Memories，默认按修改时间降序"
+    allMemoriesByTag(input: ListInput!, tag: ID!): [Memory]!
+    "用户的所有Resources，按创建时间排序，默认降序"
+    allResources(byCreate: Boolean! = false, desc: Boolean! = true, page: Int64!, size: Int64!): [Resource]!
+    "所有Subscribes"
+    allSubscribes: [Subscribe]!
+    currentUser: User!
+    "Memory 详情"
+    memory(input: ID!): Memory!
+    "服务器状态信息"
+    status: ServerStatus!
+    "所有SubComments，按创建时间排序，默认降序"
+    subComments(desc: Boolean! = true, id: ID!, page: Int64!, size: Int64!): [SubComment]!
+}
+
+type Resource {
+    "创建时间"
+    create_time: DateTime!
+    "Resource ID"
+    id: ID!
+    "引用该资源的 Memories"
+    memories: [Memory]!
+    "资源路径"
+    path: String!
+    "大小(Byte)"
+    size: Int!
+    "创建用户"
+    user: User!
+}
+
+type ServerStatus {
+    "服务器存储服务 Provider"
+    storage_provider: String!
+    "服务器 Version Code"
+    version_code: Int!
+    "服务器 Version Name"
+    version_name: String!
+}
+
+type SubComment {
+    "是否已归档"
+    archived: Boolean!
+    "Comment 对象"
+    comment: Comment!
+    "内容"
+    content: String!
+    "发布时间"
+    create_time: DateTime!
+    hashtags: [HashTag]!
+    "Comment ID"
+    id: ID!
+    "修改时间"
+    update_time: DateTime!
+    "创建用户"
+    user: User!
+}
+
+type Subscribe {
+    "是否可用"
+    available: Boolean!
+    "资源额度(Byte)"
+    capacity: Int64!
+    "创建时间"
+    create_time: DateTime!
+    "Subscribe ID"
+    id: ID!
+    "订阅名称"
+    name: ID!
+    "修改时间"
+    update_time: DateTime!
+}
+
+type UploadTokenPayload {
+    "用于STS凭证访问的AK"
+    access_key: String!
+    "文件名"
+    file_name: String!
+    "唯一资源标识"
+    id: ID!
+    "用于STS凭证访问的SK"
+    secret_access_key: String!
+    "SessionToken，使用STS凭证访问时必须携带"
+    session_token: String!
+    "UserId"
+    user_id: String!
+}
+
+type User {
+    "头像URL"
+    avatar: String!
+    "注册时间"
+    create_time: DateTime!
+    "用户ID"
+    id: ID!
+    "上次登录时间"
+    login_time: DateTime!
+    "邮箱"
+    mail: String!
+    "权限"
+    permission: Int!
+    "订阅"
+    subscribe: Subscribe!
+    "已使用资源(Byte)"
+    used: Int64!
+    "用户名"
+    username: String!
+}
+
+scalar DateTime
+
+scalar Int64
+
+scalar Upload
+
+input AddCommentInput {
+    "内容"
+    content: String!
+    "Comment 对象ID"
+    id: ID!
+    "是否子回复"
+    subComment: Boolean!
+}
+
+input AddMemoryInput {
+    "内容"
+    content: String!
+    "标题"
+    title: String!
+}
+
+input AddSubscribeInput {
+    "资源额度(Byte)"
+    capacity: Int64!
+    "是否启用"
+    enable: Boolean!
+    "订阅名称"
+    name: String!
+}
+
+input ForgetInput {
+    email: String!
+    email_verify_code: String!
+    "新密码"
+    password: String!
+}
+
+input HashTagInput {
+    "是否已归档"
+    archived: Boolean
+    "ID"
+    id: ID!
+    "名称"
+    name: String
+}
+
+input ListInput {
+    archived: Boolean! = false
+    byCreate: Boolean! = false
+    desc: Boolean! = true
+    page: Int64!
+    size: Int64!
+}
+
+input LocalUploadInput {
+    "SessionToken"
+    session_token: String!
+    "文件上传"
+    upload: Upload!
+}
+
+input LoginInput {
+    mail: String!
+    password: String!
+}
+
+input RegisterInput {
+    email: String!
+    email_verify_code: String!
+    password: String!
+    username: String!
+}
+
+input SendEmailCodeInput {
+    mail: String!
+    register: Boolean!
+}
+
+input UpdateCommentInput {
+    "是否已归档"
+    archived: Boolean
+    "内容"
+    content: String
+    "Comment ID"
+    id: ID!
+}
+
+input UpdateMemoryInput {
+    "内容"
+    content: String!
+    "ID"
+    id: ID!
+    "标题"
+    title: String!
+}
+
+input UpdateSubscribeInput {
+    "资源额度(Byte)"
+    capacity: Int64
+    "是否启用"
+    enable: Boolean
+    "订阅ID"
+    id: ID!
+    "订阅名称"
+    name: String
+}

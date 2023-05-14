@@ -1,0 +1,22 @@
+query Subscribes{
+    allSubscribes {
+        id
+        name
+        capacity
+        available
+        create_time
+        update_time
+    }
+}
+
+mutation AddSubscribe($input:AddSubscribeInput!){
+    addSubscribe(input:$input)
+}
+
+mutation UpdateSubscribe($input:UpdateSubscribeInput!){
+    updateSubscribe(input:$input)
+}
+
+mutation DeleteSubscribe($input:ID!){
+    deleteSubscribe(input:$input)
+}

@@ -1,0 +1,7 @@
+query Status {
+    status{
+        version_name
+        version_code
+        storage_provider
+    }
+}

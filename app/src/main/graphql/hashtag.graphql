@@ -1,0 +1,17 @@
+query HashTags($input:ListInput!){
+    allHashTags(input:$input){
+        id
+        name
+        archived
+        create_time
+        update_time
+    }
+}
+
+mutation UpdateHashTag($input:HashTagInput!){
+    updateHashTag(input:$input)
+}
+
+mutation DeleteHashTag($input:ID!){
+    deleteHashTag(input:$input)
+}

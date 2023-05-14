@@ -1,0 +1,74 @@
+mutation AddMemory($input:AddMemoryInput!){
+    addMemory(input:$input)
+}
+
+query Memory($input: ID!){
+    memory(input: $input){
+        id
+        user{
+            id
+            username
+            avatar
+        }
+        title
+        content
+        hashtags{
+            id
+            name
+        }
+        archived
+        create_time
+        update_time
+    }
+}
+
+query Memories($input:ListInput!){
+    allMemories(input:$input){
+        id
+        user{
+            id
+            username
+            avatar
+        }
+        title
+        content
+        hashtags{
+            id
+            name
+        }
+        archived
+        create_time
+        update_time
+    }
+}
+
+query MemoriesByTag($tag: ID!, $input: ListInput!) {
+    allMemoriesByTag(tag: $tag, input: $input) {
+        id
+        user {
+            id
+            username
+            avatar
+        }
+        title
+        content
+        hashtags {
+            id
+            name
+        }
+        archived
+        create_time
+        update_time
+    }
+}
+
+mutation UpdateMemory($input:UpdateMemoryInput!){
+    updateMemory(input:$input)
+}
+
+mutation ArchiveMemory($input:ID!,$archived:Boolean! = true){
+    archiveMemory(input:$input,archived:$archived)
+}
+mutation DeleteMemory($input:ID!){
+    deleteMemory(input:$input)
+}

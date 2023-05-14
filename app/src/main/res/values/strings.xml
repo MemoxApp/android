@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Memox</string>
+    <string name="cancel">Cancel</string>
+    <string name="login_success">Login successfully!</string>
+    <string name="logging_in">Logging in</string>
+    <string name="registering">Registering</string>
+    <string name="register_success">Register successfully!</string>
+    <string name="verify_code_sent">Send successfully</string>
+    <string name="requesting">Requesting</string>
+    <string name="reset_success">Password reset successfully</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="mail_empty">邮箱不能为空</string>
+    <string name="mail_pattern_incorrect">邮箱格式不正确</string>
+    <string name="pwd_empty">密码不能为空</string>
+    <string name="verify_code_empty">验证码不能为空</string>
+    <string name="nickname_empty">昵称不能为空</string>
+    <string name="pwd_lengh_incorrect">Password length should in 6-32 characters</string>
+    <string name="verify_code_incorrect">Verify code pattern incorrect</string>
+    <string name="nickname_length_incorrect">Nickname length incorrect</string>
+    <string name="send_verify_code">发送验证码</string>
+    <string name="secs">%d secs</string>
+    <string name="unknown_error">未知错误</string>
+    <string name="no_more">No more</string>
+    <string name="add_memory">Note memory</string>
+    <string name="back">Back</string>
+    <string name="title">标题</string>
+    <string name="content">Note daily, mood, or anything you want.</string>
+    <string name="create">Create</string>
+    <string name="create_success">Create successfully!</string>
+</resources>

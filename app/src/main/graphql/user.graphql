@@ -1,0 +1,19 @@
+query CurrentUser{
+    currentUser{
+        id
+        username
+        avatar
+        mail
+        login_time
+        create_time
+        permission
+        used
+        subscribe{
+            id
+            name
+            capacity
+            available
+            create_time
+        }
+    }
+}
