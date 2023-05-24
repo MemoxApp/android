@@ -2,8 +2,9 @@ package cn.memox.ui.screen.home
 
 import MemoriesQuery
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,17 +42,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cn.memox.AppRoute
+import cn.memox.R
 import cn.memox.base.FourState
 import cn.memox.nav
 import cn.memox.push
 import cn.memox.ui.theme.colors
 import cn.memox.ui.theme.comfortaa
 import cn.memox.ui.theme.themeColor
+import cn.memox.ui.widget.AppDialog
 import cn.memox.ui.widget.CacheImage
 import cn.memox.ui.widget.StaggeredVerticalGrid
+import cn.memox.ui.widget.Style
 import cn.memox.utils.formatHumanized
 import cn.memox.utils.pickImages
 import cn.memox.utils.removeImages
+import cn.memox.utils.string
 
 object MainScreen {
     @OptIn(ExperimentalMaterialApi::class)
@@ -63,7 +68,7 @@ object MainScreen {
         Column(
             Modifier
                 .pullRefresh(refreshState)
-                .background(colors().background)
+                .background(colors.background)
                 .systemBarsPadding()
                 .imePadding()
                 .fillMaxSize()
@@ -72,7 +77,7 @@ object MainScreen {
                 Modifier.fillMaxSize(),
                 topBar = { TopBar() },
                 floatingActionButton = { AddFab() },
-                backgroundColor = colors().background,
+                backgroundColor = colors.background,
             ) { innerPadding ->
                 Box(
                     modifier = Modifier
@@ -118,7 +123,7 @@ object MainScreen {
                 text = "Memox",
                 fontFamily = comfortaa(),
                 fontWeight = FontWeight.W900,
-                color = colors().textPrimary,
+                color = colors.textPrimary,
                 fontSize = 28.sp
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -129,45 +134,66 @@ object MainScreen {
     private fun Content(
         vm: MainViewModel = viewModel()
     ) {
-        LazyColumn(
-            modifier = Modifier,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(vm.state.memories) { memory ->
-                Item(memory)
+        val deleteMemory = vm.state.showDelete
+        AppDialog(
+            string(R.string.archive_memory),
+            string(R.string.archive_memory_desc)
+        ).negative { true }
+            .positive {
+                vm act MainAction.ArchiveMemory
+                true
             }
-        }
+            .Build(
+                show = deleteMemory != null,
+                onDismissRequest = { vm act MainAction.DismissArchiveMemory }) {
+                LazyColumn(
+                    modifier = Modifier,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(vm.state.memories) { memory ->
+                        Item(memory)
+                    }
+                }
+            }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun Item(memory: MemoriesQuery.AllMemory) {
+    fun Item(
+        memory: MemoriesQuery.AllMemory,
+        vm: MainViewModel = viewModel()
+    ) {
         val nav = nav()
         Column(
             Modifier
                 .padding(horizontal = 16.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .clickable {
+                .combinedClickable(
+                    onLongClick = {
+                        vm act MainAction.ShowArchiveMemoryDialog(memory)
+                    }
+                ) {
                     nav.push(AppRoute.memory(memory.id))
                 }
                 .fillMaxWidth()
-                .background(colors().card)
+                .background(colors.card)
                 .padding(16.dp)
         ) {
             if (memory.title.isNotBlank())
                 Text(
                     text = memory.title,
-                    color = colors().textPrimary,
+                    color = colors.textPrimary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
             Text(
                 text = memory.update_time.formatHumanized,
-                color = colors().textSecondary,
+                color = colors.textSecondary,
                 fontSize = 12.sp
             )
             Text(
                 text = memory.content.removeImages,
-                color = colors().textPrimary,
+                color = colors.textPrimary,
                 fontSize = 14.sp,
                 maxLines = 10,
                 overflow = TextOverflow.Ellipsis
@@ -175,19 +201,26 @@ object MainScreen {
             val images = memory.content.pickImages
 
             if (images.isNotEmpty()) {
+                val row = when (images.size) {
+                    1 -> 1
+                    2, 4 -> 2
+                    else -> 3
+                }
+                val style = when (row) {
+                    1 -> Style.Large
+                    2 -> Style.Middle
+                    else -> Style.Mini
+                }
                 StaggeredVerticalGrid(
-                    maxRows = when (images.size) {
-                        1 -> 1
-                        2, 4 -> 2
-                        else -> 3
-                    },
+                    maxRows = row,
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    images.forEachIndexed { _, it ->
+                    items(images) {
                         CacheImage(
                             src = it.second,
                             contentDescription = it.first,
+                            style = style,
                             modifier = Modifier
                                 .animateContentSize()
                                 .aspectRatio(1f)

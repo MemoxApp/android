@@ -71,7 +71,7 @@ class Keep<T>(v: T, private val onChange: (T, T) -> Unit = { _, _ -> }) {
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         // 可以尝试做 Time Travel
-        println("Ref:$thisRef, Property:${property}, Value:$value")
+//        println("Ref:$thisRef, Property:${property}, Value:$value")
 //        Log.i("State", value.toString())
         if (v.value == value) return
         onChange(v.value, value)

@@ -1,5 +1,6 @@
 package cn.memox.ui.screen.home
 
+import ArchiveMemoryMutation
 import MemoriesQuery
 import android.util.Log
 import androidx.lifecycle.viewModelScope
@@ -98,9 +99,28 @@ class MainViewModel : BaseViewModel<MainState, MainAction>(MainState()) {
                 }
             }
 
-            is MainAction.LikeMemory -> {
-                state.copy(memoriesState = FourState.Loading)
+            MainAction.ArchiveMemory -> state.copy(memoriesState = FourState.Loading).then {
+                val id = state.showDelete?.id ?: return@then
+                viewModelScope.launch {
+                    apollo().mutation(ArchiveMemoryMutation(id))
+                        .toFlow()
+                        .onSuccess {
+                            state = state.copy(
+                                memories = state.memories.filter { it.id != id },
+                                memoriesState = FourState.Idle
+                            )
+                        }
+                        .defaultErrorHandler { err ->
+                            state =
+                                state.copy(memoriesState = FourState.Error(err))
+                        }
+                        .launchIn(viewModelScope)
+                        .start()
+                }
             }
+
+            MainAction.DismissArchiveMemory -> state.copy(showDelete = null)
+            is MainAction.ShowArchiveMemoryDialog -> state.copy(showDelete = action.memory)
         }
     }
 

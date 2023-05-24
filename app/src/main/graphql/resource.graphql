@@ -20,15 +20,17 @@ mutation DeleteResource($input:ID!){
     deleteResource(input:$input)
 }
 
-mutation GetToken{
+mutation GetToken($input:String!) {
     # 文件名格式(.png/.jpg/.jpeg/.gif/.webp)
     # 推荐使用 32位 md5 散列值充当文件名
-    getToken(fileName:"1234567890abcdef.png"){
+    getToken(fileName:$input){
         access_key
         secret_access_key
         session_token
         user_id
         file_name
+        id
+        exist
     }
     # 本地存储时仅需 session_token ，百度云对象存储需要使用到所有四个字段
 }

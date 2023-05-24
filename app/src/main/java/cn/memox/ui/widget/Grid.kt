@@ -1,5 +1,6 @@
 package cn.memox.ui.widget
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -11,6 +12,7 @@ fun StaggeredVerticalGrid(
     maxRows: Int,
     content: @Composable () -> Unit
 ) {
+//    val gridScope = GridScope().apply { content() }
     Layout(
         content = content,
         modifier = modifier
@@ -20,40 +22,66 @@ fun StaggeredVerticalGrid(
         }
         val columnWidth = constraints.maxWidth / maxRows
         val itemConstraints = constraints.copy(minWidth = 0, maxWidth = columnWidth)
-        val colHeights = IntArray(maxRows) { 0 } // track each column's height
-        val placeables = measurables.map { measurable ->
-            val column = shortestColumn(colHeights)
+        val rowsHeight = mutableListOf<Int>()
+        val placeables = measurables.mapIndexed { index, measurable ->
+            val row = index / maxRows
+            if (row >= rowsHeight.size) rowsHeight.addAll(Array(row - rowsHeight.size + 1) { 0 })
             val placeable = measurable.measure(itemConstraints)
-            colHeights[column] += placeable.height
+            val maxHeight = rowsHeight[row]
+            if (placeable.height > maxHeight) {
+                rowsHeight[row] = placeable.height
+            }
             placeable
         }
-        val height = colHeights.maxOrNull()?.coerceIn(constraints.minHeight, constraints.maxHeight)
-            ?: constraints.minHeight
+        val height = rowsHeight.sum()
         layout(
             width = constraints.maxWidth,
             height = height
         ) {
-            val colY = IntArray(maxRows) { 0 }
-            placeables.forEach { placeable ->
-                val column = shortestColumn(colY)
+            var accumulateHeight = 0
+            placeables.forEachIndexed { index, placeable ->  // 水平放置，满了以后换新行
+                if (index % maxRows == 0) {
+                    val row = index / maxRows - 1
+                    if (row >= 0)
+                        accumulateHeight += rowsHeight[row] // 新一行
+                }
                 placeable.place(
-                    x = columnWidth * column,
-                    y = colY[column]
+                    x = columnWidth * (index % maxRows),
+                    y = accumulateHeight
                 )
-                colY[column] += placeable.height
             }
         }
     }
 }
 
-private fun shortestColumn(colHeights: IntArray): Int {
-    var minHeight = Int.MAX_VALUE
-    var column = 0
-    colHeights.forEachIndexed { index, height ->
-        if (height < minHeight) {
-            minHeight = height
-            column = index
+class GridScope {
+    val list = mutableListOf<@Composable (Modifier) -> Unit>()
+    fun item(content: @Composable () -> Unit) {
+        list.add {
+            Box(modifier = it) {
+                content()
+            }
         }
     }
-    return column
+
+    fun <T> items(data: List<T>, content: @Composable (T) -> Unit) {
+        data.forEach { dat ->
+            list.add {
+                Box(modifier = it) {
+                    content(dat)
+                }
+            }
+        }
+    }
+
+    fun <T> items(data: Set<T>, content: @Composable (T) -> Unit) {
+        data.forEach { dat ->
+            list.add {
+                Box(modifier = it) {
+                    content(dat)
+                }
+            }
+        }
+    }
+
 }

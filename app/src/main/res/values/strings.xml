@@ -27,4 +27,12 @@
     <string name="content">Note daily, mood, or anything you want.</string>
     <string name="create">Create</string>
     <string name="create_success">Create successfully!</string>
+    <string name="upload_success">Uploaded</string>
+    <string name="uploading">Uploading(%d/%d)</string>
+    <string name="no_app">No app cloud open this link</string>
+    <string name="delete_memory">删除Memory</string>
+    <string name="delete_memory_desc">确定删除这条 Memory 吗？</string>
+    <string name="archive_memory">归档Memory</string>
+    <string name="archive_memory_desc">确定归档这条 Memory 吗？</string>
+    <string name="yes">Yes</string>
 </resources>

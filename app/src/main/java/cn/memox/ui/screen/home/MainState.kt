@@ -8,6 +8,7 @@ data class MainState(
     val state: State = State.Memories,
     val memories: List<MemoriesQuery.AllMemory> = emptyList(),
     val memoriesState: FourState = FourState.Idle,
+    val showDelete: MemoriesQuery.AllMemory? = null
 ) {
     enum class State {
         Memories, Chat, Discover, Me,
@@ -22,5 +23,8 @@ sealed class MainAction {
     object Me : MainAction()
     object RefreshMemories : MainAction()
     object LoadMoreMemories : MainAction()
-    data class LikeMemory(val id: String) : MainAction()
+    data class ShowArchiveMemoryDialog(val memory: MemoriesQuery.AllMemory) : MainAction()
+
+    object DismissArchiveMemory : MainAction()
+    object ArchiveMemory : MainAction()
 }

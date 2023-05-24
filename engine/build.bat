@@ -1,0 +1,1 @@
+gomobile bind -target=android -androidapi 19 -o ../app/libs/engine.aar engine

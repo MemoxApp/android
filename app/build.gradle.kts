@@ -60,8 +60,23 @@ android {
         }
     }
 }
-
 dependencies {
+    implementation("com.touchlane:gridpad:1.1.0")
+
+    implementation(project(":richtext"))
+    implementation(Markdown.commonMark)
+    implementation(Markdown.autolink)
+    implementation(Markdown.strikethough)
+    implementation(Markdown.gfmTable)
+    implementation(Markdown.taskList)
+    implementation("androidx.webkit:webkit:1.6.1")
+
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
+    implementation(Utils.androidUtils)
+    implementation(Utils.jsoup)
+
     implementation(MMKV.base)
 
     implementation(Apollo.apollo)
@@ -88,6 +103,7 @@ dependencies {
     implementation(Compose.graphics)
     implementation(Compose.uiToolingPreview)
     implementation(Compose.material)
+    implementation(Compose.constraint)
     implementation(Compose.material3)
     implementation(Compose.navigation)
 

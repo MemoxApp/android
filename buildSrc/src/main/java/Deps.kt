@@ -2,10 +2,26 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 
 fun DependencyHandler.androidXLifeCycle() = "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
 
+object Markdown{
+    private val org = "org.commonmark"
+    private val ver = "0.21.0"
+    private val mark = { name:String -> "$org:$name:$ver" }
+    val commonMark = mark("commonmark")
+    val gfmTable = mark("commonmark-ext-gfm-tables")
+    val taskList = mark("commonmark-ext-task-list-items")
+    val strikethough = mark("commonmark-ext-gfm-strikethrough")
+    val autolink = mark("commonmark-ext-autolink")
+    val intelij = "org.jetbrains:markdown:0.4.1"
+}
 
 object Version {
     val versionCode = 1
     val versionName = "1.0"
+}
+
+object Utils{
+    val androidUtils = "com.blankj:utilcodex:1.31.1"
+    val jsoup = "org.jsoup:jsoup:1.16.1"
 }
 
 object Apollo {
@@ -50,6 +66,7 @@ object Compose {
     val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview"
     val material3 = "androidx.compose.material3:material3"
     val material = "androidx.compose.material:material"
+    val constraint = "androidx.constraintlayout:constraintlayout-compose:1.0.0-alpha08"
     private val nav_version = "2.5.3"
     val navigation = "androidx.navigation:navigation-compose:$nav_version"
 

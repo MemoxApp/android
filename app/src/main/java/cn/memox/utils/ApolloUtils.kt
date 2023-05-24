@@ -3,11 +3,13 @@ package cn.memox.utils
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.ApolloRequest
 import com.apollographql.apollo3.api.ApolloResponse
-import com.apollographql.apollo3.api.Error
 import com.apollographql.apollo3.api.Operation
 import com.apollographql.apollo3.interceptor.ApolloInterceptor
 import com.apollographql.apollo3.interceptor.ApolloInterceptorChain
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 
 fun apollo(): ApolloClient {
@@ -43,18 +45,32 @@ fun <T : Operation.Data> Flow<ApolloResponse<T>>.onSuccess(onSuccess: (T) -> Uni
     }
 }
 
-fun <T : Operation.Data> Flow<ApolloResponse<T>>.onError(onError: (List<Error>) -> Unit): Flow<ApolloResponse<T>> {
-    return onEach {
-        println("errorsIt:${it.errors}")
-        val errors = it.errors
-        if (errors != null) {
-            onError(errors)
+@OptIn(FlowPreview::class)
+fun <T : Operation.Data, A, S> Flow<Pair<ApolloResponse<T>, A>>.onSuccessFlatMapConcat(onSuccess: (T, A) -> Flow<S>): Flow<S> {
+    return flatMapConcat { pair ->
+        val data = pair.first.data
+        if (data != null) {
+            return@flatMapConcat onSuccess(data, pair.second)
+        } else {
+            return@flatMapConcat flow { }
         }
     }
 }
 
 fun <T : Operation.Data> Flow<ApolloResponse<T>>.defaultErrorHandler(handler: (String) -> Unit): Flow<ApolloResponse<T>> {
-    return onError { errors ->
-        handler(errors.joinToString(separator = "\n") { it.message })
+    return onEach { response ->
+        val errors = response.errors
+        if (errors != null) {
+            handler(errors.joinToString(separator = "\n") { it.message })
+        }
+    }
+}
+
+fun <T : Operation.Data, A> Flow<Pair<ApolloResponse<T>, A>>.errorHandler(handler: (String) -> Unit): Flow<Pair<ApolloResponse<T>, A>> {
+    return onEach { pair ->
+        val errors = pair.first.errors
+        if (errors != null) {
+            handler(errors.joinToString(separator = "\n") { it.message })
+        }
     }
 }

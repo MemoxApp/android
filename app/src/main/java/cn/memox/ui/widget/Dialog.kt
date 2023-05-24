@@ -30,7 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import cn.memox.R
 import cn.memox.ui.theme.themeColor
+import cn.memox.utils.string
 import coil.compose.AsyncImage
 
 class AppDialog(title: String? = null, message: String? = null) {
@@ -88,7 +90,7 @@ class AppDialog(title: String? = null, message: String? = null) {
         return this
     }
 
-    fun positive(text: String, onClick: () -> Boolean): AppDialog {
+    fun positive(text: String = string(R.string.yes), onClick: () -> Boolean): AppDialog {
         positiveButton = {
             Button(text, true) {
                 if (onClick()) it() // Dismiss
@@ -97,7 +99,7 @@ class AppDialog(title: String? = null, message: String? = null) {
         return this
     }
 
-    fun negative(text: String, onClick: () -> Boolean): AppDialog {
+    fun negative(text: String = string(R.string.cancel), onClick: () -> Boolean): AppDialog {
         negativeButton = {
             Button(text, false) {
                 if (onClick()) it() // Dismiss
@@ -110,7 +112,7 @@ class AppDialog(title: String? = null, message: String? = null) {
     @Composable
     fun Build(
         show: Boolean,
-        properties: DialogProperties,
+        properties: DialogProperties = DialogProperties(),
         onDismissRequest: () -> Unit,
         content: @Composable () -> Unit
     ) {

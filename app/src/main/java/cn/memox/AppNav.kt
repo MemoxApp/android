@@ -6,7 +6,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NamedNavArgument
@@ -31,30 +30,28 @@ import java.net.ServerSocket
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNav(nav: NavHostController = rememberAnimatedNavController()) {
-    CompositionLocalProvider(LocalNav provides nav) {
-        AnimatedNavHost(
-            navController = nav,
-            startDestination = kv.token.isNullOrBlank().ifElse(AppRoute.account, AppRoute.index)
+    AnimatedNavHost(
+        navController = nav,
+        startDestination = kv.token.isNullOrBlank().ifElse(AppRoute.account, AppRoute.index)
+    ) {
+        ServerSocket()
+        animateCompose(
+            AppRoute.index,
         ) {
-            ServerSocket()
-            animateCompose(
-                AppRoute.index,
-            ) {
-                MainScreen.View()
-            }
-            animateCompose(AppRoute.account) {
-                AccountScreen.View()
-            }
-            animateCompose(AppRoute.addMemory) {
-                AddMemoryScreen.View()
-            }
+            MainScreen.View()
+        }
+        animateCompose(AppRoute.account) {
+            AccountScreen.View()
+        }
+        animateCompose(AppRoute.addMemory) {
+            AddMemoryScreen.View()
+        }
 
-            animateCompose(
-                AppRoute.memory("{id}"),
-                listOf(navArgument("id") { type = NavType.StringType })
-            ) {
-                FeedScreen.View(id = it.arguments?.getString("id") ?: "")
-            }
+        animateCompose(
+            AppRoute.memory("{id}"),
+            listOf(navArgument("id") { type = NavType.StringType })
+        ) {
+            FeedScreen.View(id = it.arguments?.getString("id") ?: "")
         }
     }
 }

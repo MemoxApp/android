@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -84,8 +85,11 @@ val LocalColor = compositionLocalOf {
     LightColorPalette
 }
 
-@Composable
-fun colors() = LocalColor.current
+
+@Stable
+val colors: AppColors
+    @Composable
+    get() = LocalColor.current
 
 @Composable
 fun MemoxTheme(
