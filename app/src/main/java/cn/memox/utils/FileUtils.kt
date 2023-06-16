@@ -354,21 +354,6 @@ object AppFile {
         }
         return fileList
     }
-
-
-    /**
-     * 根据MD5值验证文件完整性
-     */
-    fun verifyFile(src: String): Boolean {
-        val file = getAppFile(src) ?: return false
-        if (file.isFile) {
-            return md5(file.readBytes()) == file.nameWithoutExtension.replace(
-                Regex("\\.[\\W\\w]*"),
-                ""
-            )
-        }
-        return false
-    }
 }
 
 /**

@@ -19,7 +19,7 @@ import androidx.navigation.navArgument
 import cn.memox.ui.screen.account.AccountScreen
 import cn.memox.ui.screen.add.memory.AddMemoryScreen
 import cn.memox.ui.screen.feed.FeedScreen
-import cn.memox.ui.screen.home.MainScreen
+import cn.memox.ui.screen.home.MainContainer
 import cn.memox.utils.ifElse
 import cn.memox.utils.kv
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -38,7 +38,7 @@ fun AppNav(nav: NavHostController = rememberAnimatedNavController()) {
         animateCompose(
             AppRoute.index,
         ) {
-            MainScreen.View()
+            MainContainer.View()
         }
         animateCompose(AppRoute.account) {
             AccountScreen.View()

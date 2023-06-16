@@ -1,8 +1,8 @@
-package cn.memox.ext.fold
+package cn.memox.ext.ext
 
-import cn.memox.ext.fold.internal.TipBlockProcessor
-import cn.memox.ext.fold.internal.TipHtmlNodeRenderer
-import cn.memox.ext.fold.internal.TipTextContentNodeRenderer
+import cn.memox.ext.ext.internal.ExtDelimiterProcessor
+import cn.memox.ext.ext.internal.ExtHtmlNodeRenderer
+import cn.memox.ext.ext.internal.ExtTextContentNodeRenderer
 import org.commonmark.Extension
 import org.commonmark.parser.Parser
 import org.commonmark.parser.Parser.ParserExtension
@@ -21,26 +21,26 @@ import org.commonmark.renderer.text.TextContentRenderer.TextContentRendererExten
  *
  *
  *
- * The parsed ins text regions are turned into [Tip] nodes.
+ * The parsed ins text regions are turned into [Ext] nodes.
  *
  */
-class TipExtension private constructor() : ParserExtension, HtmlRendererExtension,
+class ExtExtension private constructor() : ParserExtension, HtmlRendererExtension,
     TextContentRendererExtension {
     override fun extend(parserBuilder: Parser.Builder) {
-        parserBuilder.customBlockParserFactory(TipBlockProcessor.Factory())
+        parserBuilder.customDelimiterProcessor(ExtDelimiterProcessor())
     }
 
     override fun extend(rendererBuilder: HtmlRenderer.Builder) {
-        rendererBuilder.nodeRendererFactory { context -> TipHtmlNodeRenderer(context) }
+        rendererBuilder.nodeRendererFactory { context -> ExtHtmlNodeRenderer(context) }
     }
 
     override fun extend(rendererBuilder: TextContentRenderer.Builder) {
-        rendererBuilder.nodeRendererFactory { context -> TipTextContentNodeRenderer(context) }
+        rendererBuilder.nodeRendererFactory { context -> ExtTextContentNodeRenderer(context) }
     }
 
     companion object {
         fun create(): Extension {
-            return TipExtension()
+            return ExtExtension()
         }
     }
 }

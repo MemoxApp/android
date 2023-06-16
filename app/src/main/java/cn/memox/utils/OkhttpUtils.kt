@@ -50,7 +50,7 @@ fun String.HMACSha256(key: String): String {
 private val ByteArray.hex: String
     get() {
         val stringBuffer = StringBuffer()
-        var temp: String? = null
+        var temp: String?
         for (i in indices) {
             temp = Integer.toHexString(get(i).toInt() and 0xFF)
             if (temp.length == 1) {

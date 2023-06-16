@@ -1,6 +1,7 @@
 package cn.memox.utils
 
-import cn.memox.ext.fold.TipExtension
+import cn.memox.ext.ext.ExtExtension
+import cn.memox.ext.tip.TipExtension
 import org.commonmark.ext.autolink.AutolinkExtension
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
 import org.commonmark.ext.gfm.tables.TablesExtension
@@ -17,7 +18,8 @@ object MarkdownEngine {
             AutolinkExtension.create(),
             TaskListItemsExtension.create(),
             StrikethroughExtension.create(),
-            TipExtension.create()
+            TipExtension.create(),
+            ExtExtension.create()
         )
 
         val parser: Parser = Parser.builder().extensions(extensions).build()

@@ -1,10 +1,10 @@
-package cn.memox.ext.fold.internal
+package cn.memox.ext.ext.internal
 
 import org.commonmark.node.Node
 import org.commonmark.renderer.text.TextContentNodeRendererContext
 
-class TipTextContentNodeRenderer(private val context: TextContentNodeRendererContext) :
-    TipNodeRenderer() {
+class ExtTextContentNodeRenderer(private val context: TextContentNodeRendererContext) :
+    ExtNodeRenderer() {
     override fun render(node: Node) {
         renderChildren(node)
     }

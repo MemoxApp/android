@@ -1,4 +1,4 @@
-package cn.memox.ext.fold
+package cn.memox.ext.tip
 
 import org.commonmark.node.CustomBlock
 

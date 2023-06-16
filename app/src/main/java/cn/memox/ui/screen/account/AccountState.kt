@@ -40,7 +40,7 @@ data class AccountState(
 
         if (isRegister || isReset) {
             if (verifyCode.isEmpty()) throw Exception(string(R.string.verify_code_empty))
-            if (verifyCode.matches("""[0-9]{4,}""".toRegex())) throw Exception(string(R.string.verify_code_incorrect))
+            if (!verifyCode.matches("""[0-9]{4,}""".toRegex())) throw Exception(string(R.string.verify_code_incorrect))
         }
 
         if (isRegister) {

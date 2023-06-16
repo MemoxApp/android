@@ -76,12 +76,9 @@ private fun Loading(msg: String, showCancel: Boolean, cancel: String, onClick: (
             .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CircularProgressIndicator(
-            modifier = Modifier
+        LoadingBar(
+            Modifier
                 .padding(top = 32.dp)
-                .size(40.dp),
-            strokeWidth = 4.dp,
-            color = themeColor
         )
         Text(
             text = msg,
@@ -102,4 +99,14 @@ private fun Loading(msg: String, showCancel: Boolean, cancel: String, onClick: (
                 .alpha(showCancel.ifElse(1f, 0f))
         )
     }
+}
+
+@Composable
+fun LoadingBar(modifier: Modifier = Modifier) {
+    CircularProgressIndicator(
+        modifier = modifier
+            .size(40.dp),
+        strokeWidth = 4.dp,
+        color = themeColor
+    )
 }

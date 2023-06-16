@@ -1,4 +1,4 @@
-package cn.memox.ui.screen.home
+package cn.memox.ui.screen.home.main
 
 import MemoriesQuery
 import androidx.compose.animation.animateContentSize
@@ -8,6 +8,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -20,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FabPosition
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -27,12 +29,14 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -46,6 +50,9 @@ import cn.memox.R
 import cn.memox.base.FourState
 import cn.memox.nav
 import cn.memox.push
+import cn.memox.ui.screen.home.MainAction
+import cn.memox.ui.screen.home.MainViewModel
+import cn.memox.ui.theme.Gap
 import cn.memox.ui.theme.colors
 import cn.memox.ui.theme.comfortaa
 import cn.memox.ui.theme.themeColor
@@ -53,9 +60,9 @@ import cn.memox.ui.widget.AppDialog
 import cn.memox.ui.widget.CacheImage
 import cn.memox.ui.widget.StaggeredVerticalGrid
 import cn.memox.ui.widget.Style
+import cn.memox.utils.cleanText
 import cn.memox.utils.formatHumanized
 import cn.memox.utils.pickImages
-import cn.memox.utils.removeImages
 import cn.memox.utils.string
 
 object MainScreen {
@@ -77,6 +84,7 @@ object MainScreen {
                 Modifier.fillMaxSize(),
                 topBar = { TopBar() },
                 floatingActionButton = { AddFab() },
+                floatingActionButtonPosition = FabPosition.Center,
                 backgroundColor = colors.background,
             ) { innerPadding ->
                 Box(
@@ -101,12 +109,22 @@ object MainScreen {
         val nav = nav()
         FloatingActionButton(
             onClick = { nav.push(AppRoute.addMemory) },
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
+                .shadow(
+                    12.dp,
+                    RoundedCornerShape(50),
+                    ambientColor = Color.LightGray,
+                    spotColor = Color.LightGray
+                ),
+            shape = RoundedCornerShape(50),
+            containerColor = colors.card,
+            elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
         ) {
             Icon(
                 Icons.Default.Add,
                 contentDescription = "Add",
-                tint = Color.White
+                tint = colors.primary
             )
         }
     }
@@ -148,7 +166,8 @@ object MainScreen {
                 onDismissRequest = { vm act MainAction.DismissArchiveMemory }) {
                 LazyColumn(
                     modifier = Modifier,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(top = Gap.Big, bottom = Gap.Big * 2)
                 ) {
                     items(vm.state.memories) { memory ->
                         Item(memory)
@@ -192,7 +211,7 @@ object MainScreen {
                 fontSize = 12.sp
             )
             Text(
-                text = memory.content.removeImages,
+                text = memory.content.cleanText,
                 color = colors.textPrimary,
                 fontSize = 14.sp,
                 maxLines = 10,
@@ -216,7 +235,7 @@ object MainScreen {
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    items(images) {
+                    images.forEach {
                         CacheImage(
                             src = it.second,
                             contentDescription = it.first,

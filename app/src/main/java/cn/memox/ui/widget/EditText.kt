@@ -61,10 +61,13 @@ fun EditText(
         animateColorAsState(
             targetValue = if (focused.value) selectedColor else Color.White.copy(
                 alpha = 0f
-            ), animationSpec = tween()
+            ), animationSpec = tween(), label = ""
         )
     val focusColor2 =
-        animateColorAsState(targetValue = if (focused.value) selectedColor else unselectedColor)
+        animateColorAsState(
+            targetValue = if (focused.value) selectedColor else unselectedColor,
+            label = ""
+        )
     BasicTextField(
         modifier = Modifier
             .fillMaxWidth()

@@ -15,3 +15,10 @@ val String.removeImages
         replace(Regex("!\\[]\\((\\S+?)\\)"), "[图片]")
             .replace(Regex("!\\[([\\W\\w]*?)]\\((\\S+?)\\)"), "[$1]")
             .trim()
+
+val String.removeMusics
+    get() =
+        replace(Regex("@music:[\\w\\W]*?@"), "[音乐]")
+            .trim()
+val String.cleanText
+    get() = removeImages.removeMusics

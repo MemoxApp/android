@@ -1,6 +1,6 @@
-package cn.memox.ext.fold.internal
+package cn.memox.ext.tip.internal
 
-import cn.memox.ext.fold.Tip
+import cn.memox.ext.tip.Tip
 import org.commonmark.node.Node
 import org.commonmark.renderer.html.HtmlNodeRendererContext
 import org.commonmark.renderer.html.HtmlWriter

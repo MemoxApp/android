@@ -1,7 +1,7 @@
-package cn.memox.ext.fold.internal
+package cn.memox.ext.tip.internal
 
 import android.util.Log
-import cn.memox.ext.fold.Tip
+import cn.memox.ext.tip.Tip
 import org.commonmark.internal.DocumentBlockParser
 import org.commonmark.node.Block
 import org.commonmark.parser.block.AbstractBlockParser

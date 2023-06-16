@@ -14,7 +14,7 @@ fun string(id: Int) = resource.getString(id)
 
 fun string(id: Int, vararg formatArgs: Any) = resource.getString(id, *formatArgs)
 
-val resource = App.CONTEXT.resources
+val resource: Resources = App.CONTEXT.resources
 
 /**
  * 屏幕相关扩展函数

@@ -21,9 +21,10 @@ import cn.memox.utils.ifElse
 @Composable
 fun SnackText(modifier: Modifier = Modifier, color: Color, backgroundColor: Color, text: String) {
     val bgColor = animateColorAsState(
-        targetValue = text.isBlank().ifElse(backgroundColor.copy(alpha = 0f), backgroundColor)
+        targetValue = text.isBlank().ifElse(backgroundColor.copy(alpha = 0f), backgroundColor),
+        label = ""
     )
-    val textColor = animateColorAsState(targetValue = color)
+    val textColor = animateColorAsState(targetValue = color, label = "")
     Column(
         modifier
             .animateContentSize()

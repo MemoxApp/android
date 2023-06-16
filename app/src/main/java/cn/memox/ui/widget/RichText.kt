@@ -8,6 +8,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -16,7 +17,6 @@ import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.Divider
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,15 +45,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import cn.memox.ui.theme.Gap
 import cn.memox.ui.theme.colors
+import cn.memox.ui.theme.h1
+import cn.memox.ui.theme.h2
+import cn.memox.ui.theme.h3
+import cn.memox.ui.theme.h4
+import cn.memox.ui.theme.h5
+import cn.memox.ui.theme.h6
 import cn.memox.ui.theme.purple
 import cn.memox.ui.theme.themeColor
+import cn.memox.ui.widget.component.MusicCard
 import cn.memox.utils.MarkdownEngine
 import cn.memox.utils.dp2px
 import cn.memox.utils.keep
-import cn.memox.utils.px2sp
-import cn.memox.utils.sp2px
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
@@ -66,8 +73,6 @@ object RichText {
         LaunchedEffect(text) {
             html = MarkdownEngine.parse(text)?.replace("×tamp", "&timestamp") ?: "渲染失败"
         }
-        Text(text = html)
-        Divider()
         Render(html = html)
     }
 
@@ -76,13 +81,13 @@ object RichText {
         println("HTML: $html")
         ProvideTextStyle(
             value = TextStyle(
-                lineHeight = 24.sp,
-                fontSize = 14.sp,
+                lineHeight = 30.sp,
+                fontSize = 16.sp,
                 color = colors.textPrimary,
                 fontWeight = FontWeight.W400
             )
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 HandleChildren(self = Jsoup.parse(html).body())
             }
         }
@@ -116,6 +121,7 @@ object RichText {
                     )
 
                     "tip" -> TipBlock(child)
+                    "ext" -> ExtBlock(child)
                     "center" -> Center(child)
                     "pre" -> Pre(child)
                     "code" -> Code(child)
@@ -133,20 +139,6 @@ object RichText {
         }
     }
 
-    /*
-    <table>
-<thead>
-<tr>
-<th>Table
-<th>Table
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Conten
-<td><a hre
-</tr>
-     */
     @Composable
     private fun Table(self: Element) {
         val headers =
@@ -162,27 +154,23 @@ object RichText {
         ) {
             //表头
             headers?.getElementsByTag("th")?.forEach { head ->
-                item {
-                    Box(
-                        modifier =
-                        Modifier
-                            .padding(horizontal = 4.dp, vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        HandleText(self = head)
-                    }
+                Box(
+                    modifier =
+                    Modifier
+                        .padding(horizontal = 4.dp, vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    HandleText(self = head)
                 }
             }
             body?.getElementsByTag("td")?.forEach { cell ->
-                item {
-                    Box(
-                        modifier =
-                        Modifier
-                            .padding(horizontal = 4.dp, vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        HandleText(self = cell)
-                    }
+                Box(
+                    modifier =
+                    Modifier
+                        .padding(horizontal = 4.dp, vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    HandleText(self = cell)
                 }
             }
 
@@ -236,7 +224,7 @@ object RichText {
 
     @Composable
     private fun Paragraph(self: Element) {
-        Column {
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             HandleText(self = self)
         }
     }
@@ -267,6 +255,20 @@ object RichText {
             ProvideTextStyle(value = LocalTextStyle.current.copy(color = color)) {
                 Text(text = title, fontWeight = FontWeight.W700)
                 HandleChildren(self = self)
+            }
+        }
+    }
+
+    @Composable
+    private fun ExtBlock(self: Element) {
+        val type = (self.attr("type") ?: "tip").lowercase()
+        val params = self.attr("params") ?: return
+        when (type) {
+            "music" -> {
+                if (params.contains("#")) {
+                    val (id, typ) = params.split("#")
+                    MusicCard(type = typ, id = id)
+                }
             }
         }
     }
@@ -306,15 +308,17 @@ object RichText {
 
         fun inlineCode(code: String) {
             val tag = "code:$code"
+            println("$tag,len:${code.length}")
             map[tag] = InlineTextContent(
                 Placeholder(
-                    width = (code.length * 14.sp2px + 8.dp2px).px2sp,
+                    width = (code.length / 2 + 1).em,//(code.length * 16.sp2px).px2sp,
                     height = 22.sp,
-                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
                 )
             ) {
                 Box(
                     modifier = Modifier
+                        .padding(horizontal = 4.dp)
                         .background(Color.LightGray.copy(alpha = 0.3f), RoundedCornerShape(4.dp))
                         .padding(horizontal = 4.dp, vertical = 2.dp)
                 ) {
@@ -346,10 +350,17 @@ object RichText {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .animateContentSize()
+                                .border(1.dp, Color.LightGray, RoundedCornerShape(10.dp))
+                                .defaultMinSize(minHeight = 32.dp)
                                 .padding(2.dp)
                                 .clip(RoundedCornerShape(8.dp)),
                             contentScale = ContentScale.FillWidth,
                         )
+                    }
+
+                    "ext" -> {
+                        cutAndNew()
+                        ExtBlock(child)
                     }
 
                     "center" -> {
@@ -387,7 +398,7 @@ object RichText {
                     }
 
                     "br" -> {
-                        cutAndNew()
+                        builder.append("\n")
                     }
 
                     "strong" -> builder.withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -422,7 +433,10 @@ object RichText {
         val style = LocalTextStyle.current
 
         ClickableText(
-            text = annotatedString, modifier = Modifier, inlineContent = map, style = style
+            text = annotatedString,
+            modifier = Modifier.padding(vertical = Gap.Small),
+            inlineContent = map,
+            style = style
         ) { offset ->
             // We check if there is an *URL* annotation attached to the text
             // at the clicked position
@@ -475,13 +489,13 @@ object RichText {
     @Composable
     private fun Heading(self: Element) {
         val style = when (self.tagName()) {
-            "h1" -> MaterialTheme.typography.headlineLarge
-            "h2" -> MaterialTheme.typography.headlineMedium
-            "h3" -> MaterialTheme.typography.headlineSmall
-            "h4" -> MaterialTheme.typography.titleLarge
-            "h5" -> MaterialTheme.typography.titleMedium
-            "h6" -> MaterialTheme.typography.titleSmall
-            else -> MaterialTheme.typography.bodyLarge
+            "h1" -> h1
+            "h2" -> h2
+            "h3" -> h3
+            "h4" -> h4
+            "h5" -> h5
+            "h6" -> h6
+            else -> h6
         }
         ProvideTextStyle(value = style) {
             this.HandleChildren(self)

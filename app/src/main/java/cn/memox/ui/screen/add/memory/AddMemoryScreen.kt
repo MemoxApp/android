@@ -54,6 +54,7 @@ import cn.memox.ui.widget.RichText
 import cn.memox.ui.widget.SnackText
 import cn.memox.utils.ifElse
 import cn.memox.utils.keep
+import cn.memox.utils.replaceNeteaseMusic
 import cn.memox.utils.string
 
 object AddMemoryScreen {
@@ -238,7 +239,7 @@ object AddMemoryScreen {
 //            unselectedColor = colors.card,
                     background = colors.card,
                     onChange = {
-                        vm act AddMemoryAction.UpdateContent(it)
+                        vm act AddMemoryAction.UpdateContent(it.replaceNeteaseMusic)
                     },
                 )
             }

@@ -33,6 +33,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             setProguardFiles(
                 listOf(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -61,7 +62,9 @@ android {
     }
 }
 dependencies {
+    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
     implementation("com.touchlane:gridpad:1.1.0")
+    implementation("androidx.palette:palette-ktx:1.0.0")
 
     implementation(project(":richtext"))
     implementation(Markdown.commonMark)
@@ -69,7 +72,7 @@ dependencies {
     implementation(Markdown.strikethough)
     implementation(Markdown.gfmTable)
     implementation(Markdown.taskList)
-    implementation("androidx.webkit:webkit:1.6.1")
+    implementation("androidx.webkit:webkit:1.7.0")
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
